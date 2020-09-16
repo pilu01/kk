@@ -4,6 +4,8 @@
 # @FileName: main.py
 # @Software: PyCharm
 from . import web
+from app.service.gift import GiftService
+from flask import render_template
 
 
 @web.route('/')
