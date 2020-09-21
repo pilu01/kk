@@ -9,7 +9,6 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy as _SQLAlchemy, BaseQuery
 from contextlib import contextmanager
 from flask import current_app
-from sqlalchemy import Column, Integer, SmallInteger
 
 
 __all__ = ['db', 'Base']
@@ -40,8 +39,8 @@ db = SQLAlchemy(query_class=Query)
 
 class Base(db.Model):
     __abstract__ = True
-    create_time = Column('create_time', Integer)
-    status = Column(SmallInteger, default=1)
+    create_time = db.Column('create_time', db.Integer)
+    status = db.Column(db.SmallInteger, default=1)
 
     def __init__(self):
         self.create_time = int(datetime.now().timestamp())
@@ -61,10 +60,15 @@ class Base(db.Model):
             if hasattr(self, key) and key != 'id':
                 setattr(self, key, value)
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+
 
 class BaseNoCreateTime(db.Model):
     __abstract__ = True
-    status = Column(SmallInteger, default=1)
+    status = db.Column(db.SmallInteger, default=1)
 
 
 
