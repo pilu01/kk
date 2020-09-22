@@ -20,6 +20,11 @@ class BookViewModel():
         self.summary = data['summary']
         self.pages = data['pages']
 
+    @property
+    def intro(self):
+        intros = filter(lambda x: True if x else False,
+                        [self.author, self.publisher, self.price])
+        return ' / '.join(intros)
 
 class BookCollection:
     def __init__(self):

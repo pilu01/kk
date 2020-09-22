@@ -10,7 +10,6 @@ from app.models import book
 app = create_app()
 
 with app.app_context():
-    print('创建数据库表')
     db.create_all()
 
 if __name__ == '__main__':

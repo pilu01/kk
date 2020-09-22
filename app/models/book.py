@@ -6,8 +6,8 @@
 
 
 import json
-from app.models.base import Base, db
-
+from app.models.base import db, Base
+import records
 
 class Book(Base):
     """
@@ -15,7 +15,7 @@ class Book(Base):
     """
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(50), nullable=False)
-    _author = db.Column('author', db.String(30), default='未名')
+    author = db.Column('author', db.String(30), default='未名')
     binding = db.Column(db.String(20))
     publisher = db.Column(db.String(50))
     price = db.Column(db.String(20))
@@ -35,10 +35,11 @@ class Book(Base):
     #         self._author = json.dumps(value, ensure_ascii=False)
     #     else:
     #         self._author = value
+    #
+    # @property
+    # def author_str(self):
+    #     return '' if not self._author else '、'.join(self._author)
 
-    @property
-    def author_str(self):
-        return '' if not self._author else '、'.join(self._author)
 
 
 

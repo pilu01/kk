@@ -11,6 +11,7 @@ from contextlib import contextmanager
 from flask import current_app
 
 
+
 __all__ = ['db', 'Base']
 
 
@@ -37,6 +38,7 @@ class Query(BaseQuery):
 db = SQLAlchemy(query_class=Query)
 
 
+
 class Base(db.Model):
     __abstract__ = True
     create_time = db.Column('create_time', db.Integer)
@@ -56,14 +58,28 @@ class Base(db.Model):
         self.status = 0
 
     def set_attrs(self, attrs):
-        for key, value in attrs.items():
+        if isinstance(attrs, dict):
+            res = attrs
+        else:
+            res = dict(attrs.__dict__)
+        for key, value in res.items():
             if hasattr(self, key) and key != 'id':
                 setattr(self, key, value)
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
+    @staticmethod
+    def save_all(*args):
+        try:
+            db.session.add_all(args)
+            db.session.commit()
+        except:
+            db.session.rollback()
 
+    def save(self):
+        try:
+            db.session.add(self)
+            db.session.commit()
+        except:
+            db.session.rollback()
 
 
 class BaseNoCreateTime(db.Model):
