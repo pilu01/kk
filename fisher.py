@@ -5,7 +5,8 @@
 # @Software: PyCharm
 
 from app import create_app, db
-from app.models import book
+from app.models import book, user
+
 
 app = create_app()
 

@@ -11,9 +11,10 @@ from sqlalchemy import Column, ForeignKey, func
 from sqlalchemy import String, Unicode, DateTime, Boolean
 from sqlalchemy import SmallInteger, Integer, Float
 from sqlalchemy.orm import relationship
+from app import login_manager
 
 
-class User(Base):
+class User(UserMixin, Base):
     __tablename__ = 'user'
 
     id = Column(Integer, primary_key=True)
@@ -24,5 +25,9 @@ class User(Base):
     beans = Column(Float, default=0)
     send_counter = Column(Integer, default=0)
     receive_counter = Column(Integer, default=0)
-    gifts = relationship('Gift')
+    # gifts = relationship('Gift')
 
+
+@login_manager.user_loader
+def get_user(uid):
+    return User.query.get(int(uid))

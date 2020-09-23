@@ -10,10 +10,12 @@ from app.libs.helper import is_isbn_or_key
 from app.spider.yushu_book import YuShuBook
 from app.view_models.book import BookCollection
 from app.models.book import Book
+
 from app.models import db
 
-from app.models.gift import Gift
-from app.models.wish import Wish
+# from app.models.gift import Gift
+# from app.models.wish import Wish
+
 
 @web.route('/book/search', methods=['Get', 'POST'])
 def search():
@@ -51,30 +53,31 @@ def book_detail(isbn):
         这个视图函数不可以直接用cache缓存，因为不同的用户看到的视图不一样
         优化是一个逐步迭代的过程，建议在优化的初期，只缓存那些和用户无关的“公共数据"
     """
-    has_in_gifts = False
-    has_in_wishes = False
-    # isbn_or_key = is_isbn_or_key(isbn)
-    # if isbn_or_key == 'isbn':
-    # 获取图书信息
-    yushu_book = YuShuBook()
-    yushu_book.search_by_isbn(isbn)
-
-    if current_user.is_authenticated:
-        # 如果未登录，current_user将是一个匿名用户对象
-        if Gift.query.filter_by(uid=current_user.id, isbn=isbn,
-                                launched=False).first():
-            has_in_gifts = True
-        if Wish.query.filter_by(uid=current_user.id, isbn=isbn,
-                                launched=False).first():
-            has_in_wishes = True
-
-    book = BookViewModel(yushu_book.first)
-    # if has_in_gifts:
-    trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
-    trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
-    trade_wishes_model = TradeInfo(trade_wishes)
-    trade_gifts_model = TradeInfo(trade_gifts)
-    return render_template('book_detail.html', book=book, has_in_gifts=has_in_gifts,
-                           has_in_wishes=has_in_wishes,
-                           wishes=trade_wishes_model,
-                           gifts=trade_gifts_model)
+    pass
+    # has_in_gifts = False
+    # has_in_wishes = False
+    # # isbn_or_key = is_isbn_or_key(isbn)
+    # # if isbn_or_key == 'isbn':
+    # # 获取图书信息
+    # yushu_book = YuShuBook()
+    # yushu_book.search_by_isbn(isbn)
+    #
+    # if current_user.is_authenticated:
+    #     # 如果未登录，current_user将是一个匿名用户对象
+    #     if Gift.query.filter_by(uid=current_user.id, isbn=isbn,
+    #                             launched=False).first():
+    #         has_in_gifts = True
+    #     if Wish.query.filter_by(uid=current_user.id, isbn=isbn,
+    #                             launched=False).first():
+    #         has_in_wishes = True
+    #
+    # book = BookViewModel(yushu_book.first)
+    # # if has_in_gifts:
+    # trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
+    # trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
+    # trade_wishes_model = TradeInfo(trade_wishes)
+    # trade_gifts_model = TradeInfo(trade_gifts)
+    # return render_template('book_detail.html', book=book, has_in_gifts=has_in_gifts,
+    #                        has_in_wishes=has_in_wishes,
+    #                        wishes=trade_wishes_model,
+    #                        gifts=trade_gifts_model)
