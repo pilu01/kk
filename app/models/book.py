@@ -7,7 +7,7 @@
 
 import json
 from app.models.base import db, Base
-import records
+
 
 class Book(Base):
     """
