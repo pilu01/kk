@@ -52,6 +52,8 @@ def personal_center():
     pass
 
 
-@web.route('/', methods=['GET', 'POST'])
+@web.route('/logout')
+@login_required
 def logout():
-    pass
+    logout_user()
+    return redirect(url_for('web.index'))
