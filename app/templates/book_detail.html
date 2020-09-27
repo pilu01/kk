@@ -118,10 +118,10 @@
     <div class="col-md-2 description-font">
         上传于{{ wish.time }}
     </div>
-    <div class="col-md-2">
-        <a class="btn-normal"
-           href="{{ url_for('web.satisfy_wish', wid=wish.id, isbn=[book.isbn]) }}">向他赠送此书</a>
-    </div>
+<!--    <div class="col-md-2">-->
+<!--        <a class="btn-normal"-->
+<!--           href="{{ url_for('web.satisfy_wish', wid=wish.id, isbn=[book.isbn]) }}">向他赠送此书</a>-->
+<!--    </div>-->
 </div>
 {% endfor %}
 {% endif %}

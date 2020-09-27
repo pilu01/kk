@@ -40,3 +40,18 @@ def login():
         else:
             flash('账号不存在或密码错误', category='login_error')
     return render_template('auth/login.html', form=form)
+
+
+@web.route('/reset/password/', methods=['GET', 'POST'])
+def forget_password_request():
+    pass
+
+
+@web.route('/', methods=['GET', 'POST'])
+def personal_center():
+    pass
+
+
+@web.route('/', methods=['GET', 'POST'])
+def logout():
+    pass

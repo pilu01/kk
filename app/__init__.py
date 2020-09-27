@@ -11,14 +11,12 @@ from app.models.base import db
 from flask_login import LoginManager
 from flask import Flask
 
-
 login_manager = LoginManager()
 
 
 def register_web_blueprint(app):
     from app.web import web
     app.register_blueprint(web)
-
 
 
 def create_app():
@@ -40,6 +38,3 @@ def create_app():
     register_web_blueprint(app)
 
     return app
-
-
-

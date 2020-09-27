@@ -14,3 +14,8 @@ from app.service.gift import GiftService
 @web.route('/my/wish')
 def my_wish():
     pass
+
+
+@web.route('/add/wish')
+def save_to_wish():
+    pass

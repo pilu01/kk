@@ -9,6 +9,7 @@ from wtforms import StringField, IntegerField, Form, PasswordField
 from wtforms.validators import Length, NumberRange, DataRequired, length, Email, ValidationError
 from app.models.user import User
 
+
 class EmailForm(Form):
     email = StringField('电子邮件', validators=[DataRequired(), length(1, 64), Email(message='电子邮箱不符合规范')])
 
@@ -27,5 +28,4 @@ class RegisterForm(EmailForm):
 
 
 class LoginForm(EmailForm):
-    password = PasswordField('密码', validators=[
-        DataRequired(message='密码不可以为空，请输入你的密码')])
+    password = PasswordField('密码', validators=[DataRequired(message='密码不可以为空，请输入你的密码')])
