@@ -11,6 +11,7 @@ from sqlalchemy import Column, ForeignKey, func
 from sqlalchemy import String, Unicode, DateTime, Boolean
 from sqlalchemy import SmallInteger, Integer, Float
 from sqlalchemy.orm import relationship
+from werkzeug.security import generate_password_hash, check_password_hash
 from app import login_manager
 
 
@@ -19,6 +20,8 @@ class User(UserMixin, Base):
 
     id = Column(Integer, primary_key=True)
     nickname = Column(String(24), nullable=False)
+    _password = Column('password', String(100))
+
     phone_number = Column(String(18), unique=True)
     email = Column(String(50), unique=True, nullable=False)
     confirmed = Column(Boolean, default=False)
@@ -26,6 +29,18 @@ class User(UserMixin, Base):
     send_counter = Column(Integer, default=0)
     receive_counter = Column(Integer, default=0)
     # gifts = relationship('Gift')
+
+    def check_password(self, raw):
+        if not self._password:
+            return False
+        return check_password_hash(self._password, raw)
+
+    # def __init__(self, nickname, email, password, phone_number=None):
+    #     self.nickname = nickname
+    #     self._password = generate_password_hash(password)
+    #     self.email = email
+    #     self.phone_number = phone_number
+    #     super(User, self).__init__()
 
 
 @login_manager.user_loader
