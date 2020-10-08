@@ -3,3 +3,7 @@
 # @Author  : xhb
 # @FileName: settings.py
 # @Software: PyCharm
+
+
+BEANS_UPLOAD_ONE_BOOK = 0.5
+RECENT_BOOK_PER_PAGE = 30

@@ -6,6 +6,7 @@
 
 
 from flask import render_template
+from flask_login import login_required
 from sqlalchemy import desc, func
 from . import web
 from app.service.gift import GiftService
@@ -13,4 +14,12 @@ from app.service.gift import GiftService
 
 @web.route('/pending')
 def pending():
+    pass
+
+
+
+
+@web.route('/drift/<int:gid>', methods=['GET', 'POST'])
+@login_required
+def send_drift(gid):
     pass

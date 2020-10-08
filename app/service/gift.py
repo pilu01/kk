@@ -20,9 +20,11 @@ class GiftService:
     """
     @staticmethod
     def recent():
-        gift_list = Gift.query.filter_by(launched=False).order_by(
+        gift_list = Gift.query.filter_by(launched=False).group_by(
+            Gift.isbn
+        ).order_by(
             desc(Gift.create_time)).limit(
-            current_app.config['RECENT_BOOK_PER_PAGE']).all()
+            current_app.config['RECENT_BOOK_PER_PAGE']).distinct().all()
         books = [BookViewModel(gift.book.first) for gift in gift_list]
         return books
 

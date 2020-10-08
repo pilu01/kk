@@ -13,6 +13,13 @@ from sqlalchemy import SmallInteger, Integer, Float
 from sqlalchemy.orm import relationship
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import login_manager
+from app.libs.helper import is_isbn_or_key
+from app.models.gift import Gift
+from app.models.wish import Wish
+from app.spider.yushu_book import YuShuBook
+
+
+
 
 
 class User(UserMixin, Base):
@@ -35,12 +42,30 @@ class User(UserMixin, Base):
             return False
         return check_password_hash(self._password, raw)
 
-    # def __init__(self, nickname, email, password, phone_number=None):
-    #     self.nickname = nickname
-    #     self._password = generate_password_hash(password)
-    #     self.email = email
-    #     self.phone_number = phone_number
-    #     super(User, self).__init__()
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, raw):
+        self._password = generate_password_hash(raw)
+
+    def can_save_to_list(self, isbn):
+        if is_isbn_or_key(isbn) != 'isbh':
+            return False
+        yushu_book = YuShuBook()
+        yushu_book.search_by_isbn(isbn)
+        if not yushu_book.first:
+            return False
+        # 不能同时在心愿清单、礼物清单里
+
+        gifting = Gift.query.filter_by(uid=self.id, isbn=isbn, launched=False).first()
+        wishing = Wish.query.filter_by(uid=self.id, isbn=isbn, launched=False).first()
+
+        if not gifting and not wishing:
+            return True
+        else:
+            return False
 
 
 @login_manager.user_loader

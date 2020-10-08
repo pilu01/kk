@@ -15,3 +15,9 @@ class Gift(Base):
     user = relationship('User')
     isbn = db.Column(db.String(13))
     launched = db.Column(db.Boolean, default=False)
+
+    @property
+    def book(self):
+        yushu_book = YuShuBook()
+        yushu_book.search_by_isbn(self.isbn)
+        return yushu_book

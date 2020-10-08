@@ -3,6 +3,8 @@
 # @Author  : xhb
 # @FileName: book.py
 # @Software: PyCharm
+from flask_login import current_user
+
 from . import web
 from app.forms.book import SearchForm
 from flask import request, flash, render_template, jsonify, redirect, url_for
@@ -15,6 +17,9 @@ from app.models import db
 
 # from app.models.gift import Gift
 # from app.models.wish import Wish
+from ..models.gift import Gift
+from ..models.wish import Wish
+from ..view_models.trade import TradeInfo
 
 
 @web.route('/book/search', methods=['Get', 'POST'])
@@ -53,7 +58,27 @@ def book_detail(isbn):
         这个视图函数不可以直接用cache缓存，因为不同的用户看到的视图不一样
         优化是一个逐步迭代的过程，建议在优化的初期，只缓存那些和用户无关的“公共数据"
     """
+    has_in_gifts = False
+    has_in_wishes = False
+
     yushu_book = YuShuBook()
     yushu_book.search_by_isbn(isbn)
+    if current_user.is_authenticated:
+        if Gift.query.filter_by(uid=current_user.id, isbn=isbn,
+                                launched=False).first():
+            has_in_gifts = True
+        if Wish.query.filter_by(uid=current_user.id, isbn=isbn,
+                                launched=False).first():
+            has_in_wishes = True
+
+    trade_wishes = Wish.query.filter_by(isbn=isbn, launched=False).all()
+    trade_gifts = Gift.query.filter_by(isbn=isbn, launched=False).all()
+
+    trade_wishes_model = TradeInfo(trade_wishes)
+    trade_gifts_model = TradeInfo(trade_gifts)
+
     book = BookViewModel(yushu_book.first)
-    return render_template('book_detail.html', book=book, wishes=[], gifts=[])
+    return render_template('book_detail.html', book=book, has_in_gifts=has_in_gifts,
+                           has_in_wishes=has_in_wishes,
+                           wishes=trade_wishes_model,
+                           gifts=trade_gifts_model)
