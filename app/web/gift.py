@@ -8,14 +8,17 @@ from sqlalchemy import desc, func
 
 from . import web
 from flask_login import login_required, current_user
-from app.service.gift import GiftService
 from app import db
 from ..models.gift import Gift
 
 
+@login_required
 @web.route('/my/gifts')
 def my_gifts():
-    gifts = Gift.query.filter_by(launched=False)
+    uid = current_user.id
+    gifts_of_mine = Gift.get_user_gifts(uid)
+    gift_isbns = [gift.isbn for gift in gifts_of_mine]
+    count_list = Gift.get_wish_count(gift_isbns)
 
 
 

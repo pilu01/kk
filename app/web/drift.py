@@ -9,7 +9,6 @@ from flask import render_template
 from flask_login import login_required
 from sqlalchemy import desc, func
 from . import web
-from app.service.gift import GiftService
 
 
 @web.route('/pending')

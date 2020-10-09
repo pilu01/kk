@@ -10,7 +10,6 @@ from flask_login import current_user, login_required
 from sqlalchemy import desc, func
 
 from . import web
-from app.service.gift import GiftService
 from app.models.wish import Wish
 from .. import db
 
@@ -22,6 +21,10 @@ def my_wish():
     wishes = Wish.query.filter_by(uid=uid, launched=False).all()
 
 
+@login_required
+@web.route('/wish/book/<isbn>')
+def satisfy_wish():
+    pass
 
 @login_required
 @web.route('/wish/book/<isbn>')
