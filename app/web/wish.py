@@ -7,18 +7,22 @@
 
 from flask import render_template, current_app, flash, url_for, redirect
 from flask_login import current_user, login_required
-from sqlalchemy import desc, func
 
 from . import web
 from app.models.wish import Wish
 from .. import db
+from app.view_models.wish import MyWishes
 
 
 @login_required
 @web.route('/my/wish')
 def my_wish():
     uid = current_user.id
-    wishes = Wish.query.filter_by(uid=uid, launched=False).all()
+    wishes_of_mine = Wish.my_wishes(uid)
+    wish_isbns = [wish.isbn for wish in wishes_of_mine]
+    count_list = Wish.get_gift_count(wish_isbns)
+    view_model = MyWishes(wishes_of_mine, count_list).wishes
+    return render_template('my_wish.html', wishes=view_model)
 
 
 @login_required

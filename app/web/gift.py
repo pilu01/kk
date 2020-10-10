@@ -10,7 +10,7 @@ from . import web
 from flask_login import login_required, current_user
 from app import db
 from ..models.gift import Gift
-
+from app.view_models.gift import MyGifts
 
 @login_required
 @web.route('/my/gifts')
@@ -19,7 +19,8 @@ def my_gifts():
     gifts_of_mine = Gift.get_user_gifts(uid)
     gift_isbns = [gift.isbn for gift in gifts_of_mine]
     count_list = Gift.get_wish_count(gift_isbns)
-
+    view_model = MyGifts(gifts_of_mine, count_list).gifts
+    return render_template('my_gifts.html', gifts=view_model)
 
 
 @login_required
@@ -38,4 +39,7 @@ def save_to_gifts(isbn):
     return redirect(url_for('web.book_detail', isbn=isbn))
 
 
-
+@web.route('/gifts/<gid>/redraw')
+@login_required
+def redraw_from_gifts(gid):
+    pass

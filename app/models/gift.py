@@ -5,22 +5,21 @@
 # @Software: PyCharm
 from app.spider.yushu_book import YuShuBook
 from sqlalchemy.orm import relationship
-from app.models.base import Base
-from app.models import db
-from sqlalchemy import desc, func
+from app.models.base import Base, db
+from sqlalchemy import Column, String, Integer, ForeignKey, Boolean, desc, func
 from flask import current_app
-from app.models.wish import Wish
 from collections import namedtuple
 
 
 EachGiftWishCount = namedtuple('EachGiftWishCount', ['isbn', 'count'])
 
+
 class Gift(Base):
-    id = db.Column(db.Integer, primary_key=True)
-    uid = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    id = Column(db.Integer, primary_key=True)
+    uid = Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
-    isbn = db.Column(db.String(13))
-    launched = db.Column(db.Boolean, default=False)
+    isbn = Column(db.String(13))
+    launched = Column(db.Boolean, default=False)
 
     @property
     def book(self):
@@ -47,6 +46,7 @@ class Gift(Base):
 
     @classmethod
     def get_wish_count(cls, isbn_list):
+        from app.models.wish import Wish
         count_list = db.session.query(Wish.isbn, func.count(Wish.id)).filter(
             Wish.launched == False, Wish.isbn.in_(isbn_list), Wish.status == 1
         ).group_by(Wish.isbn).all()

@@ -5,7 +5,7 @@
 # @Software: PyCharm
 
 from app import create_app, db
-from app.models import book, user, wish, gift
+
 
 
 
