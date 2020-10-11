@@ -5,7 +5,7 @@
 # @Software: PyCharm
 
 from . import web
-from app.forms.auth import RegisterForm, LoginForm
+from app.forms.auth import RegisterForm, LoginForm, EmailForm
 from flask_login import login_user, login_required, logout_user, current_user
 from flask import request, redirect, url_for, render_template, flash
 from app.models.user import User
@@ -44,7 +44,20 @@ def login():
 
 @web.route('/reset/password/', methods=['GET', 'POST'])
 def forget_password_request():
-    pass
+    if request.method == 'POST':
+        form = EmailForm(request.form)
+        if form.validate():
+            account_email = form.email.data
+            user_account = User.query.filter_by(email=account_email).first_or_404()
+            from app.libs.mail import send_mail
+            send_mail(user_account, "重置密码", "email/reset_password.html", user=current_user, token='12345')
+    return render_template('auth/forget_password_request.html')
+
+
+@web.route('/reset/password/<token>', methods=['GET', 'POST'])
+def forget_password(token):
+    return render_template('auth/forget_password.html')
+
 
 
 @web.route('/', methods=['GET', 'POST'])

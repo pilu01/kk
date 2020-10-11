@@ -11,6 +11,7 @@ from app.view_models.book import BookViewModel
 
 MyWish = namedtuple('MyWish', ['id', 'book', 'gifts_count'])
 
+
 class MyWishes():
     def __init__(self, wishes_of_mine, gift_count_list):
         self._wishes_of_mine = wishes_of_mine

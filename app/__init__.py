@@ -10,8 +10,11 @@
 from app.models.base import db
 from flask_login import LoginManager
 from flask import Flask
+from flask_mail import Mail
+
 
 login_manager = LoginManager()
+mail = Mail()
 
 
 def register_web_blueprint(app):
@@ -33,6 +36,8 @@ def create_app():
 
     # 注册SQLAlchemy
     db.init_app(app)
+
+    mail.init_app(app)
 
     # register_api_blueprint(app)
     register_web_blueprint(app)
