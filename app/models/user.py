@@ -16,8 +16,9 @@ from app import login_manager
 from app.libs.helper import is_isbn_or_key
 from app.models.gift import Gift
 from app.models.wish import Wish
+from app.models.drift import Drift
 from app.spider.yushu_book import YuShuBook
-
+from app.libs.enums import PendingStatus
 
 
 
@@ -67,6 +68,22 @@ class User(UserMixin, Base):
         else:
             return False
 
+    def can_send_drift(self):
+        if self.beans < 1:
+            return False
+        success_gift_count = Gift.query.filter_by(uid=self.id, launched=True).count()
+        success_receive_count = Drift.query.filter_by(requester_id=self.id, pending=PendingStatus.success).count()
+
+        return True if (success_receive_count // 2) <= success_gift_count else False
+
+    @property
+    def summary(self):
+        return dict(
+            nickname=self.nickname,
+            beans=self.beans,
+            email=self.email,
+            send_receive=str(self.send_counter) + '/' + str(self.receive_counter)
+        )
 
 @login_manager.user_loader
 def get_user(uid):
